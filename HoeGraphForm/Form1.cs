@@ -14,7 +14,7 @@ namespace HoeGraphForm
 {
     public partial class Form1 : Form
     {
-        static string date = "\\201701181203";
+        static string date = "\\201701181627";
         static string path;
 
         private List<double[,]> kinectPoint = new List<double[,]>();
@@ -189,35 +189,31 @@ namespace HoeGraphForm
 
         private void ListToGraph()
         {
-            Series seriesKinect = new Series();
-            seriesKinect.ChartType = SeriesChartType.Line;
-            seriesKinect.BorderWidth = 1;
+            kinectChart.Series[0].Name = "Light_HAND";
+            kinectChart.Series[0].ChartType = SeriesChartType.Line;
+            kinectChart.Series[0].BorderWidth = 1;
             for (int i = 0; i < kinectVecSmooth.Count; i++)
-            {
-                seriesKinect.Points.AddXY(frameKinectToWii[i+1][0], kinectVecSmooth[i][7]);
-                //Console.WriteLine(kinectVecSmooth[i][7]);
-            }
-            kinectChart.Series.Add(seriesKinect);
+                kinectChart.Series[0].Points.AddXY(frameKinectToWii[i+1][0], kinectVecSmooth[i][7]);
 
-            Series seriesWii = new Series();
-            seriesWii.ChartType = SeriesChartType.Line;
-            seriesWii.BorderWidth = 1;
+            wiiChart.Series[0].Name = "WiiAccel";
+            wiiChart.Series[0].ChartType = SeriesChartType.Line;
+            wiiChart.Series[0].BorderWidth = 1;
             for (int i = 0; i < wii.Count; i++)
             {
                 double Y = Math.Sqrt(wii[i][0]* wii[i][0]+ wii[i][1]* wii[i][1]+ wii[i][2]* wii[i][2]);
-                seriesWii.Points.AddXY(frameWiiToKinect[i][0], Y);
-                //seriesWii.Points.AddXY(frameWiiToKinect[i][0], wii[i][1]);
-                //seriesWii.Points.AddXY(frameWiiToKinect[i][0], wii[i][2]);
-                //Console.WriteLine(wii[i][0]+","+wii[i][1]+","+wii[i][2]);
+                wiiChart.Series[0].Points.AddXY(frameWiiToKinect[i][0], Y);
             }
-            wiiChart.Series.Add(seriesWii);
         }
 
         private void rgbBar_ValueChanged(object sender, EventArgs e)
         {
-            int bmpindex = FindBmpIndex((int)rgbBar.Value);
+            int bmpindex = FindBmpIndex(rgbBar.Value);
             rgbImage.ImageLocation = @path + "\\bmp\\" + bmpindex + ".bmp";
             barLabel.Text = bmpindex.ToString();
+            //jointSpeed.Text = kinectVecSmooth[rgbBar.Value-rgbBar.Minimum][7].ToString();
+            jointSpeed.Text = kinectVecSmooth.Count.ToString();
+            //jointSpeed.Text = rgbBar.Minimum.ToString();
+            wiiAccel.Text = "?";
         }
 
         private int FindBmpIndex(int index)
