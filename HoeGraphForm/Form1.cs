@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,17 +15,21 @@ namespace HoeGraphForm
 {
     public partial class Form1 : Form
     {
+        //static string date = "\\201701181613";
         static string date = "\\201701181627";
         static string path;
+        static int JointNum = 7; //左手
+        static double max = 0; //速さの最大値
 
         private List<double[,]> kinectPoint = new List<double[,]>();
         private List<double[,]> kinectPointNorm = new List<double[,]>();
         private List<double[]> kinectVec = new List<double[]>();
         private List<double[]> kinectVecSmooth = new List<double[]>();
         private List<double[]> wii = new List<double[]>();
-        private List<int[]> frameKinectToWii = new List<int[]>();
-        private List<int[]> frameWiiToKinect = new List<int[]>();
+        private List<int>[] frameKinectToWii = new List<int>[2];
+        private List<int>[] frameWiiToKinect = new List<int>[2];
         private List<int> bmpNum = new List<int>();
+        private List<int>[] minimum = new List<int>[21];
 
         private VectorBuilder<double> V = Vector<double>.Build;
         private MatrixBuilder<double> M = Matrix<double>.Build;
@@ -34,10 +39,13 @@ namespace HoeGraphForm
             InitializeComponent();
             FileToList();
             SmoothingVec();
+            SearchMin();
             PrepareBmpFile();
             ListToGraph();
+            WriteVec();
         }
 
+        //ファイルからリストを作成
         private void FileToList()
         { 
             path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\HoeData" + date;
@@ -47,13 +55,19 @@ namespace HoeGraphForm
 
             int lineCount = 0;
             double[,] point = new double[21, 3];
+            frameKinectToWii[0] = new List<int>();
+            frameKinectToWii[1] = new List<int>();
+            frameWiiToKinect[0] = new List<int>();
+            frameWiiToKinect[1] = new List<int>();
             while ((line = file.ReadLine()) != null)
             {
                 string[] token = line.Split(',');
                 int index = lineCount++ % 21;
-                if (index == 0)
-                    frameKinectToWii.Add(new int[2] { int.Parse(token[0]), int.Parse(token[1])} );//frameListを追加
-                for (int i = 0; i < 3; i++)
+                if (index == 0) {
+                    frameKinectToWii[0].Add(int.Parse(token[0]));//frameListを追加
+                    frameKinectToWii[1].Add(int.Parse(token[1]));//frameListを追加
+                }
+                    for (int i = 0; i < 3; i++)
                 {
                     point[index, i] = double.Parse(token[i + 2]);
                     //Console.WriteLine(double.Parse(token[i + 2]));
@@ -75,7 +89,8 @@ namespace HoeGraphForm
             {
                 string[] token = line.Split(',');
                 //Console.WriteLine(line);
-                frameWiiToKinect.Add(new int[2] { int.Parse(token[0]), int.Parse(token[1]) });//frameListを追加
+                frameWiiToKinect[0].Add(int.Parse(token[0]));//frameListを追加
+                frameWiiToKinect[1].Add(int.Parse(token[1]));//frameListを追加
                 for (int i = 0; i < 3; i++) accel[i] = double.Parse(token[i + 2]);
                 //Console.WriteLine(accel[0]+","+accel[1]+","+accel[2]);
                 wii.Add((double[])accel.Clone());
@@ -84,6 +99,7 @@ namespace HoeGraphForm
             file.Close();
         }
 
+        //座標から速さを求める
         private void PointToVec(int tail)
         {
             if (tail == 0) return;
@@ -98,6 +114,7 @@ namespace HoeGraphForm
             kinectVec.Add((double[])vec.Clone());
         }
 
+        //座標を正規化
         private void PointToNorm(int tail)
         {
             //体が常に横を向くように正規化
@@ -130,6 +147,7 @@ namespace HoeGraphForm
             kinectPointNorm.Add((double[,])norm.Clone());
         }
 
+        //スムージングをした速さを求める
         private void SmoothingVec()
         {
             double SY = 0;
@@ -162,6 +180,26 @@ namespace HoeGraphForm
             }
         }
 
+        //極小値を探す
+        public void SearchMin()
+        {
+            for (int i=0; i<21; i++)
+            {
+                minimum[i] = new List<int>();
+            }
+            max = kinectVecSmooth[0][JointNum];
+            for (int i = 1; i < kinectVecSmooth.Count - 1; i++)
+            {
+                if (kinectVecSmooth[i][JointNum] > max) max = kinectVecSmooth[i][JointNum];
+                for (int j = 0; j < 21; j++)
+                {
+                    if (kinectVecSmooth[i - 1][j] > kinectVecSmooth[i][j] &&
+                       kinectVecSmooth[i][j] > kinectVecSmooth[i + 1][j])
+                        minimum[j].Add(i);
+                }
+            }
+        }
+
         /// <summary>
         /// パスからbmpファイルの名前を取得しリストにする
         /// </summary>
@@ -187,13 +225,15 @@ namespace HoeGraphForm
             rgbImage.ImageLocation = @path + "\\bmp\\" + bmpindex + ".bmp";
         }
 
+        //リストをグラフに
         private void ListToGraph()
         {
             kinectChart.Series[0].Name = "Light_HAND";
             kinectChart.Series[0].ChartType = SeriesChartType.Line;
             kinectChart.Series[0].BorderWidth = 1;
             for (int i = 0; i < kinectVecSmooth.Count; i++)
-                kinectChart.Series[0].Points.AddXY(frameKinectToWii[i+1][0], kinectVecSmooth[i][7]);
+                kinectChart.Series[0].Points.AddXY(frameKinectToWii[0][i+1], kinectVecSmooth[i][JointNum]);
+                //kinectChart.Series[0].Points.AddXY(frameKinectToWii[0][i+1], kinectVec[i][JointNum]);
 
             wiiChart.Series[0].Name = "WiiAccel";
             wiiChart.Series[0].ChartType = SeriesChartType.Line;
@@ -201,26 +241,74 @@ namespace HoeGraphForm
             for (int i = 0; i < wii.Count; i++)
             {
                 double Y = Math.Sqrt(wii[i][0]* wii[i][0]+ wii[i][1]* wii[i][1]+ wii[i][2]* wii[i][2]);
-                wiiChart.Series[0].Points.AddXY(frameWiiToKinect[i][0], Y);
+                wiiChart.Series[0].Points.AddXY(frameWiiToKinect[0][i], Y);
             }
+
+            kinectChart.Series.Add(JointNum.ToString());
+            kinectChart.Series.Add("bmp");
+
+            kinectChart.Series[1].ChartType = SeriesChartType.BoxPlot;
+            kinectChart.Series[1].BorderWidth = 1;
+            kinectChart.Series[2].ChartType = SeriesChartType.BoxPlot;
+            kinectChart.Series[2].BorderWidth = 1;
         }
 
+        //rgbBarの値が変わった時のイベント
         private void rgbBar_ValueChanged(object sender, EventArgs e)
         {
             int bmpindex = FindBmpIndex(rgbBar.Value);
+            int vecindex = FindVec(rgbBar.Value);
             rgbImage.ImageLocation = @path + "\\bmp\\" + bmpindex + ".bmp";
-            barLabel.Text = bmpindex.ToString();
-            //jointSpeed.Text = kinectVecSmooth[rgbBar.Value-rgbBar.Minimum][7].ToString();
-            jointSpeed.Text = kinectVecSmooth.Count.ToString();
-            //jointSpeed.Text = rgbBar.Minimum.ToString();
-            wiiAccel.Text = "?";
+            barLabel.Text = rgbBar.Value.ToString();
+            jointSpeed.Text = kinectVecSmooth[vecindex][JointNum].ToString();
+
+            kinectChart.Series[2].Points.Clear();
+            kinectChart.Series[2].Points.AddXY(frameKinectToWii[0][vecindex+1],kinectVecSmooth[vecindex][JointNum].ToString());
         }
 
+        //bmpファイルの番号があるかどうかを調べる
         private int FindBmpIndex(int index)
         {
             if (bmpNum.Contains(index)) return index;
             if (index > 0) return FindBmpIndex(index - 1);
             return -1;
+        }
+
+        //時刻tの速さのデータがあるか調べる
+        private int FindVec(int t)
+        {
+            if (t < frameKinectToWii[0][0]) return 0;
+            if (frameKinectToWii[0].Contains(t)) return frameKinectToWii[0].IndexOf(t);
+            else return FindVec(t - 1);
+        }
+
+        //thresholdBarが動いたときのイベント
+        private void thresholdBar_ValueChanged(object sender, EventArgs e)
+        {
+            kinectChart.Series[1].Points.Clear();
+            double T = thresholdBar.Value * 0.001;
+            thresholdLabel.Text = T.ToString();
+            kinectChart.Series[1].ChartType = SeriesChartType.BoxPlot;
+            kinectChart.Series[1].BorderWidth = 1;
+            foreach (var min in minimum[JointNum])
+            {
+                if (kinectVecSmooth[min][JointNum] < T)
+                    kinectChart.Series[1].Points.AddXY(frameKinectToWii[0][min], max);
+            }
+        }
+
+        private void WriteVec()
+        {
+            using (StreamWriter SW = new StreamWriter(path + "\\Vec" + JointNum + ".csv", false))
+            {
+                SW.WriteLine();
+                Console.WriteLine(frameKinectToWii[0].Count + "," + kinectVecSmooth.Count);
+                for (int i = 1; i < frameKinectToWii[0].Count; i++)
+                {
+                    SW.WriteLine(frameKinectToWii[0][i] + ","
+                                + kinectVecSmooth[i-1][JointNum]);
+                }
+            }
         }
     }
 }

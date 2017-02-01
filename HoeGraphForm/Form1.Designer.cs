@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.wiiChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.kinectChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.rgbImage = new System.Windows.Forms.PictureBox();
@@ -41,40 +41,43 @@
             this.rgbBar = new System.Windows.Forms.TrackBar();
             this.jointSpeed = new System.Windows.Forms.Label();
             this.wiiAccel = new System.Windows.Forms.Label();
+            this.thresholdBar = new System.Windows.Forms.TrackBar();
+            this.thresholdLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.wiiChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kinectChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rgbImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rgbBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.thresholdBar)).BeginInit();
             this.SuspendLayout();
             // 
             // wiiChart
             // 
-            chartArea5.Name = "ChartArea1";
-            this.wiiChart.ChartAreas.Add(chartArea5);
-            legend5.Name = "Legend1";
-            this.wiiChart.Legends.Add(legend5);
+            chartArea1.Name = "ChartArea1";
+            this.wiiChart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.wiiChart.Legends.Add(legend1);
             this.wiiChart.Location = new System.Drawing.Point(647, 400);
             this.wiiChart.Name = "wiiChart";
-            series5.ChartArea = "ChartArea1";
-            series5.Legend = "Legend1";
-            series5.Name = "Series1";
-            this.wiiChart.Series.Add(series5);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.wiiChart.Series.Add(series1);
             this.wiiChart.Size = new System.Drawing.Size(640, 300);
             this.wiiChart.TabIndex = 0;
             this.wiiChart.Text = "WiiRemote";
             // 
             // kinectChart
             // 
-            chartArea6.Name = "ChartArea1";
-            this.kinectChart.ChartAreas.Add(chartArea6);
-            legend6.Name = "Legend1";
-            this.kinectChart.Legends.Add(legend6);
+            chartArea2.Name = "ChartArea1";
+            this.kinectChart.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.kinectChart.Legends.Add(legend2);
             this.kinectChart.Location = new System.Drawing.Point(644, 63);
             this.kinectChart.Name = "kinectChart";
-            series6.ChartArea = "ChartArea1";
-            series6.Legend = "Legend1";
-            series6.Name = "Series1";
-            this.kinectChart.Series.Add(series6);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.kinectChart.Series.Add(series2);
             this.kinectChart.Size = new System.Drawing.Size(640, 300);
             this.kinectChart.TabIndex = 1;
             this.kinectChart.Text = "Kinect";
@@ -107,7 +110,7 @@
             // jointSpeed
             // 
             this.jointSpeed.AutoSize = true;
-            this.jointSpeed.Location = new System.Drawing.Point(645, 45);
+            this.jointSpeed.Location = new System.Drawing.Point(635, 45);
             this.jointSpeed.Name = "jointSpeed";
             this.jointSpeed.Size = new System.Drawing.Size(64, 12);
             this.jointSpeed.TabIndex = 5;
@@ -122,11 +125,31 @@
             this.wiiAccel.TabIndex = 6;
             this.wiiAccel.Text = "WiiAccel:";
             // 
+            // thresholdBar
+            // 
+            this.thresholdBar.Location = new System.Drawing.Point(818, 9);
+            this.thresholdBar.Maximum = 400;
+            this.thresholdBar.Name = "thresholdBar";
+            this.thresholdBar.Size = new System.Drawing.Size(444, 45);
+            this.thresholdBar.TabIndex = 7;
+            this.thresholdBar.ValueChanged += new System.EventHandler(this.thresholdBar_ValueChanged);
+            // 
+            // thresholdLabel
+            // 
+            this.thresholdLabel.AutoSize = true;
+            this.thresholdLabel.Location = new System.Drawing.Point(647, 9);
+            this.thresholdLabel.Name = "thresholdLabel";
+            this.thresholdLabel.Size = new System.Drawing.Size(52, 12);
+            this.thresholdLabel.TabIndex = 8;
+            this.thresholdLabel.Text = "threshold";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 701);
+            this.Controls.Add(this.thresholdLabel);
+            this.Controls.Add(this.thresholdBar);
             this.Controls.Add(this.wiiAccel);
             this.Controls.Add(this.jointSpeed);
             this.Controls.Add(this.rgbBar);
@@ -140,6 +163,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.kinectChart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rgbImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rgbBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.thresholdBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -154,6 +178,8 @@
         private System.Windows.Forms.TrackBar rgbBar;
         private System.Windows.Forms.Label jointSpeed;
         private System.Windows.Forms.Label wiiAccel;
+        private System.Windows.Forms.TrackBar thresholdBar;
+        private System.Windows.Forms.Label thresholdLabel;
     }
 }
 
