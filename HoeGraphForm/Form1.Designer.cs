@@ -43,6 +43,9 @@
             this.wiiAccel = new System.Windows.Forms.Label();
             this.thresholdBar = new System.Windows.Forms.TrackBar();
             this.thresholdLabel = new System.Windows.Forms.Label();
+            this.kinectFreq = new System.Windows.Forms.Label();
+            this.wiiFreq = new System.Windows.Forms.Label();
+            this.wiiFrame = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.wiiChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kinectChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rgbImage)).BeginInit();
@@ -110,7 +113,7 @@
             // jointSpeed
             // 
             this.jointSpeed.AutoSize = true;
-            this.jointSpeed.Location = new System.Drawing.Point(635, 45);
+            this.jointSpeed.Location = new System.Drawing.Point(647, 26);
             this.jointSpeed.Name = "jointSpeed";
             this.jointSpeed.Size = new System.Drawing.Size(64, 12);
             this.jointSpeed.TabIndex = 5;
@@ -119,7 +122,7 @@
             // wiiAccel
             // 
             this.wiiAccel.AutoSize = true;
-            this.wiiAccel.Location = new System.Drawing.Point(645, 385);
+            this.wiiAccel.Location = new System.Drawing.Point(642, 382);
             this.wiiAccel.Name = "wiiAccel";
             this.wiiAccel.Size = new System.Drawing.Size(51, 12);
             this.wiiAccel.TabIndex = 6;
@@ -139,15 +142,45 @@
             this.thresholdLabel.AutoSize = true;
             this.thresholdLabel.Location = new System.Drawing.Point(647, 9);
             this.thresholdLabel.Name = "thresholdLabel";
-            this.thresholdLabel.Size = new System.Drawing.Size(52, 12);
+            this.thresholdLabel.Size = new System.Drawing.Size(54, 12);
             this.thresholdLabel.TabIndex = 8;
-            this.thresholdLabel.Text = "threshold";
+            this.thresholdLabel.Text = "threshold:";
+            // 
+            // kinectFreq
+            // 
+            this.kinectFreq.AutoSize = true;
+            this.kinectFreq.Location = new System.Drawing.Point(647, 42);
+            this.kinectFreq.Name = "kinectFreq";
+            this.kinectFreq.Size = new System.Drawing.Size(60, 12);
+            this.kinectFreq.TabIndex = 9;
+            this.kinectFreq.Text = "Frequency:";
+            // 
+            // wiiFreq
+            // 
+            this.wiiFreq.AutoSize = true;
+            this.wiiFreq.Location = new System.Drawing.Point(642, 397);
+            this.wiiFreq.Name = "wiiFreq";
+            this.wiiFreq.Size = new System.Drawing.Size(60, 12);
+            this.wiiFreq.TabIndex = 10;
+            this.wiiFreq.Text = "Frequency:";
+            // 
+            // wiiFrame
+            // 
+            this.wiiFrame.AutoSize = true;
+            this.wiiFrame.Location = new System.Drawing.Point(644, 367);
+            this.wiiFrame.Name = "wiiFrame";
+            this.wiiFrame.Size = new System.Drawing.Size(36, 12);
+            this.wiiFrame.TabIndex = 11;
+            this.wiiFrame.Text = "frame:";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 701);
+            this.Controls.Add(this.wiiFrame);
+            this.Controls.Add(this.wiiFreq);
+            this.Controls.Add(this.kinectFreq);
             this.Controls.Add(this.thresholdLabel);
             this.Controls.Add(this.thresholdBar);
             this.Controls.Add(this.wiiAccel);
@@ -180,6 +213,9 @@
         private System.Windows.Forms.Label wiiAccel;
         private System.Windows.Forms.TrackBar thresholdBar;
         private System.Windows.Forms.Label thresholdLabel;
+        private System.Windows.Forms.Label kinectFreq;
+        private System.Windows.Forms.Label wiiFreq;
+        private System.Windows.Forms.Label wiiFrame;
     }
 }
 
