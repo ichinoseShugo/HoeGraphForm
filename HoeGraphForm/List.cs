@@ -89,7 +89,7 @@ namespace HoeGraphForm
             //file.OutputFile("Autocorrelation_wii_vec.csv", Caliculate.Autocorrelation(wii));
             //Console.WriteLine("wii:"+Caliculate.Freqency(wii)+"vel7:"+ Caliculate.Freqency(kinectSmoothedVelocity[7]));
         }
-
+        
         /// <summary>
         /// Kinect.csvからリストを作成
         /// </summary>
@@ -119,7 +119,6 @@ namespace HoeGraphForm
             }
             return lineCount/21;
         }
-
         /// <summary>
         /// Wii.csvからリストを作成
         /// </summary>
@@ -141,7 +140,6 @@ namespace HoeGraphForm
                 }
             }
         }
-
         /// <summary>
         /// 正規化した座標のリストを作成
         /// </summary>
@@ -192,7 +190,6 @@ namespace HoeGraphForm
                 }
             }
         }
-
         /// <summary>
         /// 座標のリストから速さのリストを作成
         /// </summary>
@@ -211,7 +208,6 @@ namespace HoeGraphForm
                 }
             }
         }
-
         /// <summary>
         /// スムージングした速さのリストを作成
         /// </summary>
@@ -246,7 +242,6 @@ namespace HoeGraphForm
                 }
             }
         }
-
         /// <summary>
         /// 極小値を探す
         /// </summary>
@@ -262,7 +257,6 @@ namespace HoeGraphForm
                 }
             }
         }
-
         /// <summary>
         /// パスからbmpファイルの名前を取得しリストにする
         /// </summary>

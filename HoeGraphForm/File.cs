@@ -28,7 +28,6 @@ namespace HoeGraphForm
         /// bmpフォルダのパス(パスの最後に\\がない)
         /// </summary>
         public string bmpFolderPath;
-
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -41,7 +40,6 @@ namespace HoeGraphForm
             bmpPath = hoePath + "bmp\\";
             bmpFolderPath = hoePath + "bmp";
         }
-
         /// <summary>
         /// ファイルを読み込む
         /// </summary>

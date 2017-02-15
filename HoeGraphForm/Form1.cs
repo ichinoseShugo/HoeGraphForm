@@ -22,6 +22,8 @@ namespace HoeGraphForm
         /// </summary>
         public Form1()
         {
+            this.AutoSize = true;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             InitializeComponent();
             file = new File(date);
             list = new List(file);
@@ -29,7 +31,6 @@ namespace HoeGraphForm
             InitValue();
             ListToGraph();
         }
-
         /// <summary>
         /// 関節番号
         /// </summary>
@@ -57,7 +58,6 @@ namespace HoeGraphForm
             Joint[19] = "FootRight";
             Joint[20] = "Centroid";
         }
-
         /// <summary>
         /// Formの各値を初期化
         /// </summary>
@@ -75,7 +75,6 @@ namespace HoeGraphForm
             thresholdLabel.Text = "threshold:0";
             rgbImage.ImageLocation = file.bmpPath + list.NumOfBmp[0] + ".bmp";
         }
-
         /// <summary>
         /// リストからグラフを生成
         /// </summary>
@@ -84,6 +83,7 @@ namespace HoeGraphForm
             kinectChart.Series[0].Name = Joint[JointNum];
             kinectChart.Series[0].ChartType = SeriesChartType.Line;
             kinectChart.Series[0].BorderWidth = 1;
+            kinectChart.ChartAreas[0].AxisX.Enabled = AxisEnabled.False;
             for (int i = 0; i < list.kinectSmoothedVelocity[JointNum].Count; i++)
                 kinectChart.Series[0].Points.AddXY(list.frameKinectToWii[0][i], list.kinectSmoothedVelocity[JointNum][i]);
 
@@ -113,7 +113,6 @@ namespace HoeGraphForm
             chart.Series[chart.Series.Count - 1].ChartType = SeriesChartType.BoxPlot;
             chart.Series[chart.Series.Count - 1].BorderWidth = 1;
         }
-
         /// <summary>
         /// bmpファイルがあるか調べる
         /// </summary>
@@ -125,7 +124,39 @@ namespace HoeGraphForm
             if (index > 0) return FindBmpIndex(index - 1);
             return -1;
         }
+        /// <summary>
+        /// 基本周波数を元にグラフを動作プリミティブに分割
+        /// </summary>
+        private void DivideGraph(int vecindex)
+        {
+            int bmpframe = list.frameKinectToWii[0][vecindex];
+            int tailframe = list.frameKinectToWii[0][list.frameKinectToWii[0].Count - 1];
+            int tailindex = list.frameKinectToWii[0].Count - 1;
+            int vecframe = list.frameKinectToWii[0][vecindex + kinectT];
 
+            kinectChart.Series[3].Points.Clear();
+
+            for (int i = 1; i * kinectT + vecindex < tailframe; i++)
+            {
+                double min = list.max[JointNum];
+                int minindex = 0;
+                for (int j = -15; j < 15; j++)
+                {
+                    int index = j + i * kinectT + vecindex;
+                    if (0 > index || tailindex < index) continue;
+                    if (list.kinectSmoothedVelocity[JointNum][index - 1] > list.kinectSmoothedVelocity[JointNum][index] &&
+                       list.kinectSmoothedVelocity[JointNum][index] < list.kinectSmoothedVelocity[JointNum][index + 1] &&
+                       list.kinectSmoothedVelocity[JointNum][index] < min)
+                    {
+                        min = list.kinectSmoothedVelocity[JointNum][index];
+                        minindex = index;
+                    }
+                }
+                kinectChart.Series[3].Points.AddXY(list.frameKinectToWii[0][minindex], list.max[JointNum]);
+            }
+                //kinectChart.Series[3].Points.AddXY(i*kinectT+list.frameKinectToWii[0][vecindex], list.max[JointNum]);
+        
+            }
         /// <summary>
         /// 時刻tの速さのデータがあるか調べる
         /// </summary>
@@ -146,7 +177,6 @@ namespace HoeGraphForm
         {
             return list.frameWiiToKinect[0].IndexOf(list.frameKinectToWii[1][vecindex]);
         }
-
         /// <summary>
         /// rgbBarが変化した時のイベント
         /// </summary>
@@ -166,17 +196,17 @@ namespace HoeGraphForm
 
             kinectChart.Series[2].Points.Clear();
             kinectChart.Series[2].Points.AddXY(list.frameKinectToWii[0][vecindex], list.kinectSmoothedVelocity[JointNum][vecindex]);
-            kinectChart.Series[3].Points.Clear();
-            for (int i = 1; i * kinectT + list.frameKinectToWii[0][vecindex] < list.frameKinectToWii[0][list.frameKinectToWii[0].Count-1]; i++)
-                kinectChart.Series[3].Points.AddXY(i*kinectT+list.frameKinectToWii[0][vecindex], list.max[JointNum]);
+
+            DivideGraph(vecindex);
 
             wiiChart.Series[2].Points.Clear();
             wiiChart.Series[2].Points.AddXY(list.frameKinectToWii[1][vecindex], list.wii[wiiindex][3]);
+            /*
             wiiChart.Series[3].Points.Clear();
             for (int i = 1; i * wiiT + list.frameKinectToWii[1][vecindex] < list.frameWiiToKinect[0][list.frameWiiToKinect[0].Count - 1]; i++)
                 wiiChart.Series[3].Points.AddXY(i * wiiT + list.frameKinectToWii[1][vecindex], 5);
-        }
-
+            */    
+    }
         /// <summary>
         /// thresholdBarが動いた時のイベント
         /// </summary>
