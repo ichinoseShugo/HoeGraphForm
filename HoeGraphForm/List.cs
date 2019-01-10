@@ -1,9 +1,6 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HoeGraphForm
 {
@@ -51,10 +48,14 @@ namespace HoeGraphForm
         /// </summary>
         public List<int> NumOfBmp = new List<int>();
         /// <summary>
+        /// データを分割するインデックスを格納するリスト
+        /// </summary>
+        public List<int> divIndex = new List<int>();
+        /// <summary>
         /// 各関節の速さの最大値(平滑化後) max[関節番号]
         /// </summary>
         public double[] max = new double[21];
-        
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -151,8 +152,8 @@ namespace HoeGraphForm
             for (int i = 0; i < listnum; i++)
             {
                 //体が常に横を向くように正規化
-                //HipRightからHipLeftへのびるベクトルに対して垂直なベクトルを計算
-                double[] hip = new double[3] { -kinectPoints[12][i][2] - kinectPoints[16][i][2],
+                //HipRightからHipLeftへのびるXZ平面ベクトルに対して垂直なXZ平面ベクトルを計算
+                double[] hip = new double[3] { -(kinectPoints[12][i][2] - kinectPoints[16][i][2]),
                                            0,
                                            kinectPoints[12][i][0] - kinectPoints[16][i][0]};
                 var VecHip = Vector.DenseOfArray(hip);
@@ -161,9 +162,7 @@ namespace HoeGraphForm
                 //e_y = (0,1,0)
                 var e_y = Vector.DenseOfArray(new double[3] { 0, 1, 0 });
                 //e_z = e_x × e_y
-                var e_z = Vector.DenseOfArray(new double[3] { -VecHip.At(2), 0, VecHip.At(0) });//1
-                                                                                                //求めたベクトルの絶対値を1に
-                e_z = e_z.Divide((float)e_z.L2Norm());
+                var e_z = Vector.DenseOfArray(new double[3] { -e_x.At(2), 0, e_x.At(0) });
 
                 //e_x,e_y,e_zを一つの行列に
                 var mat = Matrix.DenseOfColumnVectors(new Vector<double>[] { e_x, e_y, e_z }).Inverse();
@@ -171,8 +170,8 @@ namespace HoeGraphForm
                 for (int j = 0; j < 21; j++)
                 {
                     var VecJ = Vector.DenseOfArray(new double[3] { kinectPoints[j][i][0]-kinectPoints[0][i][0],
-                                                             kinectPoints[j][i][1]-kinectPoints[0][i][1],
-                                                             kinectPoints[j][i][2]-kinectPoints[0][i][2]});
+                                                                   kinectPoints[j][i][1]-kinectPoints[0][i][1],
+                                                                   kinectPoints[j][i][2]-kinectPoints[0][i][2]});
                     var E = mat * VecJ;
                     for (int k = 0; k < 3; k++)
                         norm[k] = E.At(k);
@@ -186,7 +185,7 @@ namespace HoeGraphForm
                     double[] points = kinectNormalizedPoints[j][i];
                     double Vec = Math.Sqrt(points[0] * points[0] + points[1] * points[1] + points[2] * points[2]);
                     Vec /= headVec;
-                    kinectNormalizedPoints[j][i][0] *= Vec;
+                    //kinectNormalizedPoints[j][i][0] *= Vec;
                 }
             }
         }

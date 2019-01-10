@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HoeGraphForm
 {
@@ -109,6 +106,22 @@ namespace HoeGraphForm
                 for (int line = 0; line < autocorr.Length; line++)
                 {
                     SW.WriteLine(line + "," + autocorr[line]);
+                }
+            }
+        }
+        /// <summary>
+        /// ファイルに書き込む
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="points"></param>
+        public void OutputFileDivide(string filename, List<double> velocity, List<int> divindex)
+        {
+            using (StreamWriter SW = new StreamWriter(hoePath + filename, false))
+            {
+                for (int line = 0; line < velocity.Count; line++)
+                {
+                    SW.WriteLine(line + "," + velocity[line]);
+                    if (divindex.Contains(line)) SW.WriteLine();
                 }
             }
         }

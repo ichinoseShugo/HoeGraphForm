@@ -46,11 +46,20 @@
             this.kinectFreq = new System.Windows.Forms.Label();
             this.wiiFreq = new System.Windows.Forms.Label();
             this.wiiFrame = new System.Windows.Forms.Label();
+            this.startLabel = new System.Windows.Forms.Label();
+            this.startBar = new System.Windows.Forms.TrackBar();
+            this.JointBox = new System.Windows.Forms.ComboBox();
+            this.divideBar = new System.Windows.Forms.TrackBar();
+            this.divButton = new System.Windows.Forms.Button();
+            this.divLabel = new System.Windows.Forms.Label();
+            this.save_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.wiiChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kinectChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rgbImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rgbBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.thresholdBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.divideBar)).BeginInit();
             this.SuspendLayout();
             // 
             // wiiChart
@@ -87,7 +96,7 @@
             // 
             // rgbImage
             // 
-            this.rgbImage.Location = new System.Drawing.Point(1, 94);
+            this.rgbImage.Location = new System.Drawing.Point(1, 216);
             this.rgbImage.Name = "rgbImage";
             this.rgbImage.Size = new System.Drawing.Size(640, 480);
             this.rgbImage.TabIndex = 2;
@@ -96,15 +105,15 @@
             // barLabel
             // 
             this.barLabel.AutoSize = true;
-            this.barLabel.Location = new System.Drawing.Point(-1, 30);
+            this.barLabel.Location = new System.Drawing.Point(2, 3);
             this.barLabel.Name = "barLabel";
-            this.barLabel.Size = new System.Drawing.Size(11, 12);
+            this.barLabel.Size = new System.Drawing.Size(75, 12);
             this.barLabel.TabIndex = 3;
-            this.barLabel.Text = "0";
+            this.barLabel.Text = "ImageFrame:0";
             // 
             // rgbBar
             // 
-            this.rgbBar.Location = new System.Drawing.Point(1, 45);
+            this.rgbBar.Location = new System.Drawing.Point(1, 20);
             this.rgbBar.Name = "rgbBar";
             this.rgbBar.Size = new System.Drawing.Size(400, 45);
             this.rgbBar.TabIndex = 4;
@@ -173,11 +182,82 @@
             this.wiiFrame.TabIndex = 11;
             this.wiiFrame.Text = "frame:";
             // 
+            // startLabel
+            // 
+            this.startLabel.AutoSize = true;
+            this.startLabel.Location = new System.Drawing.Point(2, 70);
+            this.startLabel.Name = "startLabel";
+            this.startLabel.Size = new System.Drawing.Size(70, 12);
+            this.startLabel.TabIndex = 12;
+            this.startLabel.Text = "DivideStart:0";
+            // 
+            // startBar
+            // 
+            this.startBar.Location = new System.Drawing.Point(1, 87);
+            this.startBar.Name = "startBar";
+            this.startBar.Size = new System.Drawing.Size(400, 45);
+            this.startBar.TabIndex = 13;
+            this.startBar.ValueChanged += new System.EventHandler(this.startBar_ValueChanged);
+            // 
+            // JointBox
+            // 
+            this.JointBox.FormattingEnabled = true;
+            this.JointBox.Location = new System.Drawing.Point(1, 189);
+            this.JointBox.Name = "JointBox";
+            this.JointBox.Size = new System.Drawing.Size(154, 20);
+            this.JointBox.TabIndex = 14;
+            this.JointBox.Tag = "HandLeft";
+            this.JointBox.SelectedIndexChanged += new System.EventHandler(this.JointBox_SelectedIndexChanged);
+            // 
+            // divideBar
+            // 
+            this.divideBar.Location = new System.Drawing.Point(1, 137);
+            this.divideBar.Name = "divideBar";
+            this.divideBar.Size = new System.Drawing.Size(400, 45);
+            this.divideBar.TabIndex = 15;
+            this.divideBar.ValueChanged += new System.EventHandler(this.divideBar_ValueChanged);
+            // 
+            // divButton
+            // 
+            this.divButton.Location = new System.Drawing.Point(407, 134);
+            this.divButton.Name = "divButton";
+            this.divButton.Size = new System.Drawing.Size(96, 23);
+            this.divButton.TabIndex = 16;
+            this.divButton.Text = "DivideButton";
+            this.divButton.UseVisualStyleBackColor = true;
+            this.divButton.Click += new System.EventHandler(this.divButton_Click);
+            // 
+            // divLabel
+            // 
+            this.divLabel.AutoSize = true;
+            this.divLabel.Location = new System.Drawing.Point(408, 164);
+            this.divLabel.Name = "divLabel";
+            this.divLabel.Size = new System.Drawing.Size(66, 12);
+            this.divLabel.TabIndex = 17;
+            this.divLabel.Text = "DivideIndex:";
+            // 
+            // save_button
+            // 
+            this.save_button.Location = new System.Drawing.Point(509, 134);
+            this.save_button.Name = "save_button";
+            this.save_button.Size = new System.Drawing.Size(75, 23);
+            this.save_button.TabIndex = 18;
+            this.save_button.Text = "save";
+            this.save_button.UseVisualStyleBackColor = true;
+            this.save_button.Click += new System.EventHandler(this.saveButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 701);
+            this.Controls.Add(this.save_button);
+            this.Controls.Add(this.divLabel);
+            this.Controls.Add(this.divButton);
+            this.Controls.Add(this.divideBar);
+            this.Controls.Add(this.JointBox);
+            this.Controls.Add(this.startBar);
+            this.Controls.Add(this.startLabel);
             this.Controls.Add(this.wiiFrame);
             this.Controls.Add(this.wiiFreq);
             this.Controls.Add(this.kinectFreq);
@@ -197,6 +277,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.rgbImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rgbBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.thresholdBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.divideBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -216,6 +298,13 @@
         private System.Windows.Forms.Label kinectFreq;
         private System.Windows.Forms.Label wiiFreq;
         private System.Windows.Forms.Label wiiFrame;
+        private System.Windows.Forms.Label startLabel;
+        private System.Windows.Forms.TrackBar startBar;
+        private System.Windows.Forms.ComboBox JointBox;
+        private System.Windows.Forms.TrackBar divideBar;
+        private System.Windows.Forms.Button divButton;
+        private System.Windows.Forms.Label divLabel;
+        private System.Windows.Forms.Button save_button;
     }
 }
 
